@@ -16,8 +16,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.lucasvieira.whatsappclone.R;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
@@ -39,40 +37,36 @@ public class LoginActivity extends AppCompatActivity {
         campoEmail = findViewById(R.id.editEmail);
         campoSenha = findViewById(R.id.editSenha);
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
-
     }
 
     //métodos
-
-
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser usuarioAtual = autenticacao.getCurrentUser();
-        if (usuarioAtual != null){
+        if (usuarioAtual != null) {
             abrirTelaPrincipal();
         }
     }
 
-    public void abrirTelaCadastro(View view){
+    public void abrirTelaCadastro(View view) {
         Intent intent = new Intent(LoginActivity.this, CadastrarActivity.class);
         startActivity(intent);
     }
 
-    public void abrirTelaPrincipal(){
+    public void abrirTelaPrincipal() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void logarUsuario(Usuario usuario){
+    public void logarUsuario(Usuario usuario) {
         autenticacao.signInWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
         ).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                   abrirTelaPrincipal();
-
+                if (task.isSuccessful()) {
+                    abrirTelaPrincipal();
                 } else {
 
                     String excecao = "";
@@ -82,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         excecao = "Usuário não está cadastrado!";
                     } catch (FirebaseAuthInvalidCredentialsException e) {
                         excecao = "E-mail e senha não correspondem a um usuário cadastrado";
-                    }  catch (Exception e) {
+                    } catch (Exception e) {
                         excecao = "Erro ao logar usuário: " + e.getMessage();
                         e.printStackTrace();
                     }
@@ -94,12 +88,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void validarAutenticacaoUsuario(View view){
+    public void validarAutenticacaoUsuario(View view) {
 
         String textoEmail = campoEmail.getText().toString();
         String textoSenha = campoSenha.getText().toString();
 
-        if ( !textoEmail.isEmpty() || !textoSenha.isEmpty()) {
+        if (!textoEmail.isEmpty() || !textoSenha.isEmpty()) {
 
             Usuario usuario = new Usuario();
             usuario.setEmail(textoEmail);
@@ -107,10 +101,8 @@ public class LoginActivity extends AppCompatActivity {
 
             logarUsuario(usuario);
 
-
         } else {
             Toast.makeText(this, "Preencha os campos!", Toast.LENGTH_SHORT).show();
-
         }
     }
 }
