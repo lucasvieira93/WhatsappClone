@@ -1,9 +1,7 @@
 package com.lucasvieira.whatsappclone.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.lucasvieira.whatsappclone.R;
@@ -68,12 +66,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()){
- /*           case R.id.menuPesquisa:
+            case R.id.menuPesquisa:
+                Toast.makeText(this, "Pesquisa", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.menuConfigurações:
+                Intent intent = new Intent(MainActivity.this, ConfiguracoesActivity.class);
+                startActivity(intent);
                 break;
-*/
+                
             case R.id.menuSair:
                 deslogarUsuario();
                 finish();

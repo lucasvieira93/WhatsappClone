@@ -23,7 +23,6 @@ import com.lucasvieira.whatsappclone.model.Usuario;
 
 public class CadastrarActivity extends AppCompatActivity {
 
-    private Button botaoCadastrar;
     private TextInputEditText campoNome, campoEmail, campoSenha;
     private FirebaseAuth autenticacao;
 
@@ -35,7 +34,6 @@ public class CadastrarActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         getSupportActionBar().hide();
 
-        botaoCadastrar = findViewById(R.id.buttonCadastrar);
         campoNome = findViewById(R.id.campoNome);
         campoEmail = findViewById(R.id.editEmail);
         campoSenha = findViewById(R.id.editSenha);
