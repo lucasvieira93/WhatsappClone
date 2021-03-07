@@ -11,7 +11,8 @@
         android:theme="@style/Theme.WhatsappClone">
 
         <activity android:name=".activity.ConfiguracoesActivity"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/Theme.WhatsappClone.NoActionBar"/>
 
         <activity
             android:name=".activity.MainActivity"
