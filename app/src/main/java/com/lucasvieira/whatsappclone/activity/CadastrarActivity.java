@@ -1,4 +1,4 @@
-package com.lucasvieira.whatsappclone.activity;
+    package com.lucasvieira.whatsappclone.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
