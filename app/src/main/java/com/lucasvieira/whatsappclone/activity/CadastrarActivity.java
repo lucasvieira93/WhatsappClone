@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.lucasvieira.whatsappclone.helper.Base64Custom;
 import com.lucasvieira.whatsappclone.R;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
 import com.lucasvieira.whatsappclone.model.Usuario;
@@ -52,6 +52,16 @@ public class CadastrarActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                         Toast.makeText(CadastrarActivity.this, "Cadastrado com Sucesso!", Toast.LENGTH_SHORT).show();
                     finish();
+
+                    try {
+
+                        String identificadorUsuario = Base64Custom.codificarBase64( usuario.getEmail());
+                        usuario.setId(identificadorUsuario);
+                        usuario.salvar();
+
+                    } catch (Exception e){
+                        e.getMessage();
+                    }
 
                 } else {
                     String excecao = "";
