@@ -5,6 +5,9 @@
 <!--    Permissões do app-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"

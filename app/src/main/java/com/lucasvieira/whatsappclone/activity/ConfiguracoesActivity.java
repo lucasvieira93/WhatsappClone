@@ -7,13 +7,21 @@ package com.lucasvieira.whatsappclone.activity;
 
  import android.Manifest;
  import android.content.DialogInterface;
+ import android.content.Intent;
  import android.content.pm.PackageManager;
  import android.os.Bundle;
+ import android.provider.MediaStore;
+ import android.view.View;
+ import android.widget.ImageButton;
 
  import com.lucasvieira.whatsappclone.R;
  import com.lucasvieira.whatsappclone.helper.Permissao;
 
 public class ConfiguracoesActivity extends AppCompatActivity {
+
+    private ImageButton imageButtonCamera, imageButtonGaleria;
+    private static final int SELECAO_CAMERA = 100;
+    private static final int SELECAO_GALERIA = 200;
 
     private String[] permissoesNecessarias = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -34,6 +42,28 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        imageButtonCamera = findViewById(R.id.imageButtonCamera);
+        imageButtonGaleria = findViewById(R.id.imageButtonFoto);
+
+        imageButtonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if ( i.resolveActivity(getPackageManager()) != null ){
+                    startActivityForResult(i, SELECAO_CAMERA);
+                }
+
+            }
+        });
+
+        imageButtonGaleria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -63,6 +93,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
+
+
 }
