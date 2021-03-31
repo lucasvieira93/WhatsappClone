@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -50,13 +50,18 @@ dependencies {
     //Dependencia para arredondar imagens
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //Girar foto automaticamente
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
     implementation 'com.google.firebase:firebase-analytics'
 
-    //Farebase Database e Autenticação
+    //Farebase Database, Storage e Autenticação
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-storage:19.2.1'
+
 }
 
 apply plugin: 'com.android.application'
