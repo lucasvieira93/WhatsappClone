@@ -1,4 +1,4 @@
-    package com.lucasvieira.whatsappclone.activity;
+package com.lucasvieira.whatsappclone.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,9 +19,10 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.lucasvieira.whatsappclone.helper.Base64Custom;
 import com.lucasvieira.whatsappclone.R;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
+import com.lucasvieira.whatsappclone.helper.UsuarioFirebase;
 import com.lucasvieira.whatsappclone.model.Usuario;
 
-public class CadastrarActivity extends AppCompatActivity {
+public class CadastroActivity extends AppCompatActivity {
 
     private TextInputEditText campoNome, campoEmail, campoSenha;
     private FirebaseAuth autenticacao;
@@ -37,7 +38,6 @@ public class CadastrarActivity extends AppCompatActivity {
         campoNome = findViewById(R.id.campoNome);
         campoEmail = findViewById(R.id.editEmail);
         campoSenha = findViewById(R.id.editSenha);
-
     }
 
     public void cadastrarUsuario(Usuario usuario) {
@@ -50,16 +50,17 @@ public class CadastrarActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if (task.isSuccessful()) {
-                        Toast.makeText(CadastrarActivity.this, "Cadastrado com Sucesso!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CadastroActivity.this, "Cadastrado com Sucesso!", Toast.LENGTH_SHORT).show();
+                    UsuarioFirebase.atualizarNomeUsuario(usuario.getNome());
                     finish();
 
                     try {
 
-                        String identificadorUsuario = Base64Custom.codificarBase64( usuario.getEmail());
+                        String identificadorUsuario = Base64Custom.codificarBase64(usuario.getEmail());
                         usuario.setId(identificadorUsuario);
                         usuario.salvar();
 
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         e.getMessage();
                     }
 
@@ -78,7 +79,7 @@ public class CadastrarActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Toast.makeText(CadastrarActivity.this, excecao, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CadastroActivity.this, excecao, Toast.LENGTH_SHORT).show();
 
                 }
             }

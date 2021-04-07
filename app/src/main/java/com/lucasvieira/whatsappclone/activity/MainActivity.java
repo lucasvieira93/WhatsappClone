@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                .add("Conversas", ConversasFragment.class)
-                .add("Contatos", ContatosFragment.class)
-                .create());
+                        .add("Conversas", ConversasFragment.class)
+                        .add("Contatos", ContatosFragment.class)
+                        .create());
 
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(adapter);
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menuPesquisa:
                 Toast.makeText(this, "Pesquisa", Toast.LENGTH_SHORT).show();
                 break;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ConfiguracoesActivity.class);
                 startActivity(intent);
                 break;
-                
+
             case R.id.menuSair:
                 deslogarUsuario();
                 finish();
@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void deslogarUsuario(){
-        try{
+    public void deslogarUsuario() {
+        try {
             autenticacao.signOut();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

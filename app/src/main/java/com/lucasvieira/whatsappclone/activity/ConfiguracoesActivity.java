@@ -13,23 +13,24 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.lucasvieira.whatsappclone.R;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
-import com.lucasvieira.whatsappclone.helper.Base64Custom;
 import com.lucasvieira.whatsappclone.helper.Permissao;
 import com.lucasvieira.whatsappclone.helper.UsuarioFirebase;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 
@@ -48,6 +49,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private CircleImageView circleImageViewPerfil;
     private StorageReference storageReference;
     private String identificadorUsuario;
+    private EditText editPerfilNome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGaleria = findViewById(R.id.imageButtonFoto);
         circleImageViewPerfil = findViewById(R.id.fotoPerfil);
+        editPerfilNome = findViewById(R.id.editPerfilNome);
 
         //Configuração Toolbar
         Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
@@ -68,6 +71,23 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         toolbar.setElevation(0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Recuperar dados do usuário
+        FirebaseUser usuario = UsuarioFirebase.getUsuarioAtual();
+        Uri url = usuario.getPhotoUrl();
+
+        if (url != null) {
+
+            Glide.with(ConfiguracoesActivity.this)
+                    .load(url)
+                    .into(circleImageViewPerfil);
+
+        } else {
+            circleImageViewPerfil.setImageResource(R.drawable.padrao);
+        }
+
+        //Recuperar nome usuario
+        editPerfilNome.setText(usuario.getDisplayName());
 
         //Validar permissões
         Permissao.validarPermissoes(permissoesNecessarias, this, 1);
@@ -104,57 +124,72 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-            if (resultCode == RESULT_OK) {
-                Bitmap imagem = null;
+        if (resultCode == RESULT_OK) {
+            Bitmap imagem = null;
 
-                try {
-                    switch (requestCode) {
-                        case SELECAO_CAMERA:
-                            imagem = (Bitmap) data.getExtras().get("data");
-                            break;
+            try {
+                switch (requestCode) {
+                    case SELECAO_CAMERA:
+                        imagem = (Bitmap) data.getExtras().get("data");
+                        break;
 
-                        case SELECAO_GALERIA:
-                            Uri localImagemSelecionada = data.getData();
-                            imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
-                            break;
-                    }
-
-                    if (imagem != null) {
-                        circleImageViewPerfil.setImageBitmap(imagem);
-
-                        //Recuperar dados da imagem para o firebase
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-                        byte[] dadosImagem = baos.toByteArray();
-
-                        //Salvar imagem no Firebase
-                        StorageReference imageRef = storageReference
-                                .child("imagens")
-                                .child("perfil")
-                                .child(identificadorUsuario)
-                                .child("perfil.jpg");
-
-                        UploadTask uploadTask = imageRef.putBytes(dadosImagem);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ConfiguracoesActivity.this, "Erro ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(ConfiguracoesActivity.this, "Sucesso ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    case SELECAO_GALERIA:
+                        Uri localImagemSelecionada = data.getData();
+                        imagem = MediaStore.Images.Media.getBitmap(getContentResolver(), localImagemSelecionada);
+                        break;
                 }
 
-            } else {
-                Toast.makeText(this, "Erro ao selecionar foto!", Toast.LENGTH_SHORT).show();
+                if (imagem != null) {
+                    circleImageViewPerfil.setImageBitmap(imagem);
+
+                    //Recuperar dados da imagem para o firebase
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                    byte[] dadosImagem = baos.toByteArray();
+
+                    //Salvar imagem no Firebase
+                    StorageReference imageRef = storageReference
+                            .child("imagens")
+                            .child("perfil")
+                            .child(identificadorUsuario)
+                            .child("perfil.jpg");
+
+                    //Retorna objeto que irá controlar o upload
+                    UploadTask uploadTask = imageRef.putBytes(dadosImagem);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(ConfiguracoesActivity.this, "Erro ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(ConfiguracoesActivity.this, "Sucesso ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
+
+                            //recuperando foto
+                            imageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    Uri url = task.getResult();
+                                    atualizaFotoUsuario(url);
+                                }
+                            });
+
+                        }
+                    });
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+        } else {
+            Toast.makeText(this, "Erro ao selecionar foto!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void atualizaFotoUsuario(Uri url) {
+        UsuarioFirebase.atualizarFotoUsuario(url);
     }
 
     @Override
