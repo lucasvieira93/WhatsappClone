@@ -36,13 +36,13 @@
         android:ems="10"
         android:hint="Nome do Usuário"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/salvarPerfilNome"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fotoPerfil" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/salvarPerfilNome"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="20dp"

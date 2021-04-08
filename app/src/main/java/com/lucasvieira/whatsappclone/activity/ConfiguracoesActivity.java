@@ -14,9 +14,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +33,7 @@ import com.lucasvieira.whatsappclone.R;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
 import com.lucasvieira.whatsappclone.helper.Permissao;
 import com.lucasvieira.whatsappclone.helper.UsuarioFirebase;
+import com.lucasvieira.whatsappclone.model.Usuario;
 
 import java.io.ByteArrayOutputStream;
 
@@ -50,6 +53,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private String identificadorUsuario;
     private EditText editPerfilNome;
+    private ImageView imageAtualizarNome;
+    private Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +64,16 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         //Configurações Iniciais
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         identificadorUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
+
+        //Validar permissões
+        Permissao.validarPermissoes(permissoesNecessarias, this, 1);
 
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGaleria = findViewById(R.id.imageButtonFoto);
         circleImageViewPerfil = findViewById(R.id.fotoPerfil);
         editPerfilNome = findViewById(R.id.editPerfilNome);
+        imageAtualizarNome = findViewById(R.id.salvarPerfilNome);
 
         //Configuração Toolbar
         Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
@@ -89,9 +99,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         //Recuperar nome usuario
         editPerfilNome.setText(usuario.getDisplayName());
 
-        //Validar permissões
-        Permissao.validarPermissoes(permissoesNecessarias, this, 1);
-
         //Ações foto de perfil
 //        Para endireitar imagem, utilizar a lib: https://github.com/ArthurHub/Android-Image-Cropper
 
@@ -114,6 +121,26 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 if (i.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(i, SELECAO_GALERIA);
                 }
+            }
+        });
+
+        imageAtualizarNome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                atualizarPerfilNome();
+            }
+        });
+
+        //Evento para atualizar nome pressionando ENTER
+        editPerfilNome.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        atualizarPerfilNome();
+                }
+
+                return true;
             }
         });
 
@@ -144,15 +171,14 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
                     //Recuperar dados da imagem para o firebase
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                     byte[] dadosImagem = baos.toByteArray();
 
                     //Salvar imagem no Firebase
                     StorageReference imageRef = storageReference
                             .child("imagens")
                             .child("perfil")
-                            .child(identificadorUsuario)
-                            .child("perfil.jpg");
+                            .child(identificadorUsuario + ".jpeg");
 
                     //Retorna objeto que irá controlar o upload
                     UploadTask uploadTask = imageRef.putBytes(dadosImagem);
@@ -164,7 +190,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(ConfiguracoesActivity.this, "Sucesso ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
 
                             //recuperando foto
                             imageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -174,7 +199,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                                     atualizaFotoUsuario(url);
                                 }
                             });
-
                         }
                     });
 
@@ -188,8 +212,16 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         }
     }
 
+    //metodos do ConfiguraçõesActivity
     public void atualizaFotoUsuario(Uri url) {
-        UsuarioFirebase.atualizarFotoUsuario(url);
+        boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
+
+        if (retorno) {
+            usuarioLogado.setFoto(url.toString());
+            usuarioLogado.atualizar();
+
+            Toast.makeText(this, "Sua foto foi alterada!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -217,5 +249,17 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void atualizarPerfilNome() {
+        String nome = editPerfilNome.getText().toString();
+        boolean retorno = UsuarioFirebase.atualizarNomeUsuario(nome);
+
+        if (retorno) {
+            usuarioLogado.setNome(nome);
+            usuarioLogado.atualizar();
+
+            Toast.makeText(ConfiguracoesActivity.this, "Nome atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

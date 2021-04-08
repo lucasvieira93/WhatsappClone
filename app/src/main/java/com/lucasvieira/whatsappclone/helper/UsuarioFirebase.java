@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
+import com.lucasvieira.whatsappclone.model.Usuario;
 
 public class UsuarioFirebase {
 
@@ -44,13 +45,12 @@ public class UsuarioFirebase {
                     }
                 }
             });
-
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     public static boolean atualizarNomeUsuario(String nome) {
@@ -69,12 +69,27 @@ public class UsuarioFirebase {
                     }
                 }
             });
-
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
+    }
+
+    public static Usuario getDadosUsuarioLogado() {
+        FirebaseUser firebaseUser = getUsuarioAtual();
+
+        Usuario usuario = new Usuario();
+        usuario.setEmail(firebaseUser.getEmail());
+        usuario.setNome(firebaseUser.getDisplayName());
+
+        if (firebaseUser.getPhotoUrl() == null) {
+            usuario.setFoto("");
+        } else {
+            usuario.setFoto(firebaseUser.getPhotoUrl().toString());
+        }
+
+        return usuario;
     }
 }
