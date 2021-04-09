@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lucasvieira.whatsappclone">
-
-<!--    Permissões do app-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Permissões do app -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera2"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -19,24 +18,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone">
 
-        <activity android:name=".activity.ConfiguracoesActivity"
+        <activity
+            android:name=".activity.ChatActivity"
+            android:label="Chat"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/Theme.WhatsappClone.NoActionBar"/>
 
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activity.MainActivity"/>
+
         <activity
-            android:name=".activity.MainActivity"
-            android:label="@string/title_activity_main2"
+            android:name=".activity.ConfiguracoesActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:theme="@style/Theme.WhatsappClone.NoActionBar" />
 
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/Theme.WhatsappClone.NoActionBar" />
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <activity android:name=".activity.CadastroActivity" />
 
         <activity android:name=".activity.LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
