@@ -25,7 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         tools:layout_editor_absoluteX="202dp">
@@ -34,7 +33,7 @@
             android:id="@+id/campoNome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/round_corner"
             android:hint="Digite seu nome" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -43,7 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout5"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
         tools:layout_editor_absoluteX="199dp">
@@ -52,7 +50,7 @@
             android:id="@+id/editEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/round_corner"
             android:hint="Digite seu e-mail"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -62,7 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
         tools:layout_editor_absoluteX="154dp">
@@ -71,7 +68,7 @@
             android:id="@+id/editSenha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/round_corner"
             android:hint="Digite sua senha"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
