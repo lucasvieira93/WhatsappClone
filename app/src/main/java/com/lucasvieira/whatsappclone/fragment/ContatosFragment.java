@@ -2,7 +2,6 @@ package com.lucasvieira.whatsappclone.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.lucasvieira.whatsappclone.R;
 
+import com.lucasvieira.whatsappclone.activity.ChatActivity;
 import com.lucasvieira.whatsappclone.adapter.ContatosAdapter;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
 import com.lucasvieira.whatsappclone.helper.RecyclerItemClickListener;
@@ -53,7 +53,7 @@ public class ContatosFragment extends Fragment {
         usuarioAtual = UsuarioFirebase.getUsuarioAtual();
 
         //configurar adapter
-        adapter = new ContatosAdapter(listaContatos, getContext());
+        adapter = new ContatosAdapter(listaContatos, getActivity());
 
         //configurar recyclerView
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -64,19 +64,17 @@ public class ContatosFragment extends Fragment {
         //Configurar evento de clique no recyclerView
         recyclerViewListaContatos.addOnItemTouchListener(
                 new RecyclerItemClickListener(
-                        getActivity(),
+                        getContext(),
                         recyclerViewListaContatos,
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                /*Intent i = new Intent(getActivity(), ChatActivity.class);
-                                startActivity(i);*/
-                                Toast.makeText(getActivity(), "botão apertado", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(getActivity(), ChatActivity.class);
+                                startActivity(i);
                             }
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-                                Toast.makeText(getActivity(), "botão segurado", Toast.LENGTH_SHORT).show();
 
                             }
 
