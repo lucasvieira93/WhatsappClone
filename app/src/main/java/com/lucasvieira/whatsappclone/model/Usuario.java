@@ -6,10 +6,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lucasvieira.whatsappclone.config.ConfiguracaoFirebase;
 import com.lucasvieira.whatsappclone.helper.UsuarioFirebase;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Usuario {
+public class Usuario implements Serializable {
     private String id;
     private String nome;
     private String email;
