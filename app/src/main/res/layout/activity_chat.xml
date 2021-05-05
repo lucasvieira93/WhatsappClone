@@ -38,7 +38,7 @@
             android:id="@+id/textViewNomeChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lucas Vieira"
+            android:text="Usuario"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

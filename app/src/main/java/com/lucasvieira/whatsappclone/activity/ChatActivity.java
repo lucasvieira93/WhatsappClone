@@ -64,7 +64,8 @@ public class ChatActivity extends AppCompatActivity {
             if (foto != null){
                 Uri url = Uri.parse(usuarioDestinatario.getFoto());
                 Glide.with(ChatActivity.this)
-                        .load(circleImageViewFoto);
+                        .load(url)
+                        .into(circleImageViewFoto);
             } else {
                 circleImageViewFoto.setImageResource(R.drawable.padrao);
             }
