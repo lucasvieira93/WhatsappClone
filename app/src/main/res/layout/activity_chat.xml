@@ -15,8 +15,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_chat" />
-
     <androidx.appcompat.widget.Toolbar
 
         android:id="@+id/toolbar"
@@ -45,5 +43,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <include layout="@layout/content_chat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
